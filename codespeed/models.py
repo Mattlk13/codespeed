@@ -25,6 +25,7 @@ class Project(models.Model):
     repo_path = models.CharField("Repository URL", blank=True, max_length=200)
     repo_user = models.CharField("Repository username", blank=True, max_length=100)
     repo_pass = models.CharField("Repository password", blank=True, max_length=100)
+    repo_base_branch = models.CharField("Repository base branch", default=settings.DEF_BRANCH, max_length=50)
     commit_browsing_url = models.CharField("Commit browsing URL", blank=True, max_length=200)
     track = models.BooleanField("Track changes", default=False)
 
