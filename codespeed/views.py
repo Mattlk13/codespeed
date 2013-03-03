@@ -655,7 +655,7 @@ def changes(request):
     for proj in Project.objects.filter(track=True):
         executables[proj] = Executable.objects.filter(project=proj)
         projectlist.append(proj)
-        branch = Branch.objects.filter(name=settings.DEF_BRANCH, project=proj)
+        branch = Branch.objects.filter(name=proj.repo_base_branch, project=proj)
         revisionlists[proj.name] = Revision.objects.filter(
             branch=branch
         ).order_by('-date')[:revlimit]
