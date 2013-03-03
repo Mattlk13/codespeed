@@ -397,6 +397,13 @@ def gettimelinedata(request):
         if Branch.objects.filter(name=settings.DEF_BRANCH):
             trunks.append(settings.DEF_BRANCH)
         #for branch in data2.get('bran', '').split(','): #-- For now, we'll only work with trunk branches
+
+        for e_id in executables:
+	    e = Executable.objects.get(id=e_id)
+	    proj = Project.objects.get(id=e.project_id)
+	    if proj.repo_base_branch != settings.DEF_BRANCH:
+		trunks.append(proj.repo_base_branch)
+
         append = False
         for branch in trunks:
             append = False
