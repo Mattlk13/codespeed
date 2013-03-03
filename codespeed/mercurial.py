@@ -46,7 +46,7 @@ def getlogs(endrev, startrev):
 
     cmd = ["hg", "log",
             "-r", "%s:%s" % (endrev.commitid, startrev.commitid),
-            "-b", "default",
+            "-b", "%s" % endrev.branch.name,
             "--template", "{rev}:{node|short}\n{node}\n{author|user}\n{author|email}\n{date}\n{desc}\n=newlog=\n"]
 
     working_copy = endrev.branch.project.working_copy
