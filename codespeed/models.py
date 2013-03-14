@@ -132,7 +132,7 @@ class Benchmark(models.Model):
         ('O', 'Own-project'),
     )
 
-    name = models.CharField(unique=True, max_length=30)
+    name = models.CharField(unique=True, max_length=60)
     parent = models.ForeignKey('self', verbose_name="parent",
         help_text="allows to group benchmarks in hierarchies",
         null=True, blank=True, default=None)
