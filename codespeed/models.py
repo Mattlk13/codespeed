@@ -39,7 +39,8 @@ class Project(models.Model):
             error = 'Not supported for %s project' % self.get_repo_type_display()
             raise AttributeError(error)
 
-        return self.repo_path.replace('/', '_').replace(':', '_').replace('.', '_')
+        return (self.name.replace('/', '_').replace(':', '_').replace('.', '_') + \
+                '_' + self.repo_path.replace('/', '_').replace(':', '_').replace('.', '_'))
 
     @property
     def working_copy(self):
