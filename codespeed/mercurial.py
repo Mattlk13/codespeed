@@ -45,8 +45,7 @@ def getlogs(endrev, startrev):
     updaterepo(endrev.branch.project, update=False)
 
     cmd = ["hg", "log",
-            "-r", "%s:%s" % (endrev.commitid, startrev.commitid),
-            "-b", "%s" % endrev.branch.name,
+            "-r", "%s::%s" % (startrev.commitid, endrev.commitid),
             "--template", "{rev}:{node|short}\n{node}\n{author|user}\n{author|email}\n{date}\n{desc}\n=newlog=\n"]
 
     working_copy = endrev.branch.project.working_copy
@@ -86,4 +85,5 @@ def getlogs(endrev, startrev):
     # Remove last log here because mercurial saves the short hast as commitid now
     if len(logs) > 1 and logs[-1].get('short_commit_id') == startrev.commitid:
         logs.pop()
+    logs.reverse()
     return logs
