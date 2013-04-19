@@ -655,7 +655,7 @@ def changes(request):
             pass
 
     # Information for template
-    revlimit = 20
+    revlimit = 50
     executables = {}
     revisionlists = {}
     projectlist = []
