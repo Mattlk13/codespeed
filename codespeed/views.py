@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from itertools import chain
+from operator import itemgetter
 import json
 import logging
 
@@ -65,6 +66,7 @@ def getbaselineexecutables():
                 'executable': exe,
                 'revision': rev,
                 'name': name,
+                'date': rev.date,
             })
     # move default to first place
     if hasattr(settings, 'DEF_BASELINE') and settings.DEF_BASELINE != None:
@@ -177,7 +179,10 @@ def getcomparisonexes():
                         'executable': exe,
                         'revision': rev,
                         'name': name,
+                        'date': rev.date,
                     })
+        executables.sort(key = itemgetter('date'))
+        executables.reverse()
         all_executables[proj] = executables
         exekeys += executablekeys
     return all_executables, exekeys
