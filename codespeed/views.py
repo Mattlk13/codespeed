@@ -809,6 +809,7 @@ def saverevisioninfo(rev):
         rev.author = log['author']
         rev.date = log['date']
         rev.message = log['message']
+        rev.tag = log['tags']
 
 
 def validate_result(item):
