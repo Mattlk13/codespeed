@@ -78,6 +78,9 @@ def getlogs(endrev, startrev):
                 date = date.split('-')[0]
                 date = datetime.datetime.fromtimestamp(float(date)).strftime("%Y-%m-%d %H:%M:%S")
 
+                if tags == 'tip':
+                    tags = ''
+
                 # Add changeset info
                 logs.append({
                     'date': date, 'author': author_name,
