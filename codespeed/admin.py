@@ -7,7 +7,7 @@ from django.contrib import admin
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('name', 'repo_type', 'repo_path', 'track')
+    list_display = ('name', 'repo_type', 'repo_path', 'repo_base_branch', 'track')
 
 admin.site.register(Project, ProjectAdmin)
 

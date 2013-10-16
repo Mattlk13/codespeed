@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 from itertools import chain
+from operator import itemgetter
 import json
 import logging
 
@@ -74,6 +75,7 @@ def getbaselineexecutables():
                 'executable': exe,
                 'revision': rev,
                 'name': name,
+                'date': rev.date,
             })
     # move default to first place
     if hasattr(settings, 'DEF_BASELINE') and settings.DEF_BASELINE is not None:
@@ -187,7 +189,10 @@ def getcomparisonexes():
                         'executable': exe,
                         'revision': rev,
                         'name': name,
+                        'date': rev.date,
                     })
+        executables.sort(key = itemgetter('date'))
+        executables.reverse()
         all_executables[proj] = executables
         exekeys += executablekeys
     return all_executables, exekeys
@@ -410,7 +415,14 @@ def gettimelinedata(request):
         trunks = []
         if Branch.objects.filter(name=settings.DEF_BRANCH):
             trunks.append(settings.DEF_BRANCH)
-        # For now, we'll only work with trunk branches
+        #for branch in data2.get('bran', '').split(','): #-- For now, we'll only work with trunk branches
+
+        for e_id in executables:
+	    e = Executable.objects.get(id=e_id)
+	    proj = Project.objects.get(id=e.project_id)
+	    if proj.repo_base_branch != settings.DEF_BRANCH:
+		trunks.append(proj.repo_base_branch)
+
         append = False
         for branch in trunks:
             append = False
@@ -669,14 +681,14 @@ def changes(request):
             pass
 
     # Information for template
-    revlimit = 20
+    revlimit = 50
     executables = {}
     revisionlists = {}
     projectlist = []
     for proj in Project.objects.filter(track=True):
         executables[proj] = Executable.objects.filter(project=proj)
         projectlist.append(proj)
-        branch = Branch.objects.filter(name=settings.DEF_BRANCH, project=proj)
+        branch = Branch.objects.filter(name=proj.repo_base_branch, project=proj)
         revisionlists[proj.name] = Revision.objects.filter(
             branch=branch
         ).order_by('-date')[:revlimit]
@@ -824,6 +836,7 @@ def saverevisioninfo(rev):
         rev.author = log['author']
         rev.date = log['date']
         rev.message = log['message']
+        rev.tag = log['tags']
 
 
 def validate_result(item):

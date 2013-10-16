@@ -27,6 +27,9 @@ class Project(models.Model):
                                  blank=True, max_length=100)
     repo_pass = models.CharField("Repository password",
                                  blank=True, max_length=100)
+    repo_base_branch = models.CharField("Repository base branch",
+                                        default=settings.DEF_BRANCH,
+                                        max_length=50)
     commit_browsing_url = models.CharField("Commit browsing URL",
                                            blank=True, max_length=200)
     track = models.BooleanField("Track changes", default=False)
@@ -41,7 +44,8 @@ class Project(models.Model):
             error = 'Not supported for %s project' % self.get_repo_type_display()
             raise AttributeError(error)
 
-        return os.path.splitext(self.repo_path.split(os.sep)[-1])[0]
+        return (self.name.replace('/', '_').replace(':', '_').replace('.', '_') + \
+                '_' + self.repo_path.replace('/', '_').replace(':', '_').replace('.', '_'))
 
     @property
     def working_copy(self):
@@ -96,7 +100,7 @@ class Revision(models.Model):
         if self.date is None:
             date = None
         else:
-            date = self.date.strftime("%h %d, %H:%M")
+            date = self.date.strftime("%h %d, %Y")
         string = " - ".join(filter(None, (date, self.commitid, self.tag)))
         if self.branch.name != "default":
             string += " - " + self.branch.name
@@ -133,7 +137,7 @@ class Benchmark(models.Model):
         ('O', 'Own-project'),
     )
 
-    name = models.CharField(unique=True, max_length=30)
+    name = models.CharField(unique=True, max_length=60)
     parent = models.ForeignKey(
         'self', verbose_name="parent",
         help_text="allows to group benchmarks in hierarchies",
